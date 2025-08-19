@@ -29,7 +29,7 @@ function useDebounce(val, delay) {
   return debouncedVal;
 }
 
-export function Search() {
+export function Search({ onSelect }) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("Select companies...");
   const [query, setQuery] = useState("");
@@ -88,8 +88,9 @@ export function Search() {
                   <CommandItem
                     key={result.ticker}
                     value={label}
-                    onSelect={(currentValue) => {
-                      setValue(currentValue === value ? "" : currentValue);
+                    onSelect={() => {
+                      onSelect(result.ticker);
+                      setValue(label);
                       setQuery("");
                       setResults([]);
                       setOpen(false);
