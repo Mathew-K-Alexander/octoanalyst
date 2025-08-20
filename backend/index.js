@@ -1,43 +1,93 @@
-import express from "express";
 import axios from "axios";
-import { wrapper } from "axios-cookiejar-support";
-import { CookieJar } from "tough-cookie";
+import UserAgent from "user-agents";
+import { sleep } from "./utils.js";
 
-const app = express();
-const PORT = 5000;
+export class NseIndia {
+  baseUrl = "https://www.nseindia.com";
+  cookieMaxAge = 60; // seconds
+  baseHeaders = {
+    Authority: "www.nseindia.com",
+    Referer: "https://www.nseindia.com/",
+    Accept: "*/*",
+    Origin: this.baseUrl,
+    "Accept-Language": "en-US,en;q=0.9",
+    "Accept-Encoding": "application/json, text/plain, */*",
+    Connection: "keep-alive",
+  };
 
-// Create a cookie jar
-const jar = new CookieJar();
-// Wrap axios to support cookies
-const client = wrapper(axios.create({ jar }));
+  userAgent = "";
+  cookies = "";
+  cookieUsedCount = 0;
+  cookieExpiry = new Date().getTime() + this.cookieMaxAge * 1000;
+  noOfConnections = 0;
 
-// Browser-like headers
-const headers = {
-  "User-Agent":
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36",
-  Accept: "application/json, text/plain, */*",
-  Referer: "https://www.nseindia.com/",
-};
-
-app.get("/api/annual-report/:ticker", async (req, res) => {
-  const { ticker } = req.params;
-
-  try {
-    // 1. Hit NSE homepage to establish cookies
-    await client.get("https://www.nseindia.com", { headers });
-
-    // 2. Reuse the same cookie jar to call the API
-    const apiRes = await client.get(
-      `https://www.nseindia.com/api/annual-reports?index=equities&symbol=${ticker}`,
-      { headers }
-    );
-
-    res.json(apiRes.data);
-  } catch (error) {
-    console.error("Error fetching NSE data:", error.message);
+  async getNseCookies() {
+    if (
+      this.cookies === "" ||
+      this.cookieUsedCount > 10 ||
+      this.cookieExpiry <= new Date().getTime()
+    ) {
+      this.userAgent = new UserAgent().toString();
+      const response = await axios.get(
+        `${this.baseUrl}/get-quotes/equity?symbol=TCS`,
+        {
+          headers: { ...this.baseHeaders, "User-Agent": this.userAgent },
+        }
+      );
+      const setCookies = response.headers["set-cookie"] || [];
+      const cookies = [];
+      setCookies.forEach((cookie) => {
+        const cookieKeyValue = cookie.split(";")[0];
+        cookies.push(cookieKeyValue);
+      });
+      this.cookies = cookies.join("; ");
+      this.cookieUsedCount = 0;
+      this.cookieExpiry = new Date().getTime() + this.cookieMaxAge * 1000;
+    }
+    this.cookieUsedCount++;
+    return this.cookies;
   }
-});
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+  /**
+   * @param {string} url NSE API URL
+   * @returns {Promise<any>} JSON
+   */
+  async getData(url) {
+    let retries = 0;
+    let hasError = false;
+    do {
+      while (this.noOfConnections >= 5) {
+        await sleep(500);
+      }
+      this.noOfConnections++;
+      try {
+        const response = await axios.get(url, {
+          headers: {
+            ...this.baseHeaders,
+            Cookie: await this.getNseCookies(),
+            "User-Agent": this.userAgent,
+          },
+        });
+        this.noOfConnections--;
+        return response.data;
+      } catch (error) {
+        hasError = true;
+        retries++;
+        this.noOfConnections--;
+        if (retries >= 10) throw error;
+      }
+    } while (hasError);
+  }
+
+  getDataByEndpoint(apiEndpoint) {
+    return this.getData(`${this.baseUrl}${apiEndpoint}`);
+  }
+
+  getAnnualReports(symbol) {
+    return this.getDataByEndpoint(
+      `/api/annual-reports?index=equities&symbol=${encodeURIComponent(
+        symbol.toUpperCase()
+      )}`
+    );
+  }
+}

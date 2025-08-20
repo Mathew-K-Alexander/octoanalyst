@@ -17,8 +17,8 @@ export function TriggerFlow({ selected }) {
         `http://localhost:3000/api/equity/annualReports/${ticker}`
       );
       setStatus("Submit");
-      console.log(res.data.data);
-    } catch {
+      console.log(res.data.data[0].fileName);
+    } catch (error) {
       console.log(error);
     }
   }
