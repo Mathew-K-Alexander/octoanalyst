@@ -1,0 +1,26 @@
+{
+  "CEO's letter": {
+    "summary": "This section gives an overview of the company's performance, key developments, and outlook from the perspective of top management. Pay attention to the tone and content of the letter, as it can give insights into the company's strategy, challenges, and prospects."
+  },
+  "Business Description": {
+    "summary": "This section describes the company's main products or services, target markets, competitive advantages, and key risks. It can help you understand the company's business model and the factors that drive its success."
+  },
+  "Management's Discussion and Analysis (MD&A)": {
+    "summary": "The MD&A provides a detailed discussion of the company's financial performance, including revenue and expense trends, cash flows, and key financial ratios. It also has management's perspective on the factors that affect the company's performance and outlook for the future."
+  },
+  "Financial Statements": {
+    "summary": "The annual report has the company's audited financial statements, including the income statement, balance sheet, and statement of cash flows. Review these carefully while looking for trends in revenue, expenses, profits, assets, liabilities, and cash flows. From there, you can compute the critical financial ratios."
+  },
+  "Notes to the Financial Statements": {
+    "summary": "The notes (or footnotes) provide additional details and explanations about the company's accounting policies, significant transactions, and other important information that may not be clear from the financial statements alone."
+  },
+  "Auditor's Report": {
+    "summary": "This provides an independent opinion on whether the financial statements fairly present the company's financial position and performance following generally accepted accounting principles. Look for any qualified opinions or disclaimers that may indicate potential issues."
+  },
+  "Corporate Governance": {
+    "summary": "The annual report often has information on the company's board of directors, executive compensation, and other corporate governance matters. Consider whether the company's governance practices align with the interests of shareholders and whether there are any red flags, such as conflicts of interest or excessive compensation."
+  },
+  "Additional Disclosures": {
+    "summary": "The annual report may include additional disclosures about legal proceedings, regulatory issues, or environmental, social, and governance (ESG) factors that could impact the company's performance and reputation."
+  }
+}

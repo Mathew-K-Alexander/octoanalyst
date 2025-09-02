@@ -36,7 +36,7 @@ export function Search({ onSelect }) {
   const [fuse, setFuse] = useState(null);
   const [results, setResults] = useState([]);
 
-  const debouncedQuery = useDebounce(query, 300);
+  const debouncedQuery = useDebounce(query, 600);
 
   useEffect(() => {
     fetch("/data/nse_list.json")
