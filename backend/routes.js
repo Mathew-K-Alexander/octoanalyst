@@ -15,6 +15,7 @@ import {
   finishJob,
   failJob,
 } from "./jobs.js";
+import "dotenv/config";
 
 const mainRouter = Router();
 const upload = multer({ dest: "uploads/" });

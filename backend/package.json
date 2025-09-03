@@ -11,6 +11,7 @@
   "author": "Mathew K Alexander",
   "license": "ISC",
   "dependencies": {
+    "@google/genai": "^1.16.0",
     "axios": "^1.11.0",
     "axios-cookiejar-support": "^6.0.4",
     "cors": "^2.8.5",
@@ -18,6 +19,7 @@
     "express": "^5.1.0",
     "multer": "^2.0.2",
     "nanoid": "^5.1.5",
+    "p-limit": "^7.1.1",
     "tough-cookie": "^5.1.2",
     "unzipper": "^0.12.3",
     "user-agents": "^1.1.637"
