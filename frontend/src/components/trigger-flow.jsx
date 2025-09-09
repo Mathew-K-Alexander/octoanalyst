@@ -5,9 +5,10 @@ import { useRef, useState } from "react";
 
 const baseURL = "http://localhost:3000";
 
-export function TriggerFlow({ selected }) {
+export function TriggerFlow({ selected, setMapcontent }) {
   const [status, setStatus] = useState("idle");
   const [label, setLabel] = useState("Submit");
+
   const esRef = useRef(null);
 
   function closeStream() {
@@ -46,26 +47,29 @@ export function TriggerFlow({ selected }) {
       });
 
       es.addEventListener("done", () => {
-        setStatus("done");
-        setLabel("Done");
-        closeStream();
-      });
+        setStatus("creating map");
+        setLabel("creating map");
 
-      es.addEventListener("error", (evt) => {
-        setStatus("error");
-        let m = null;
-        try {
-          m = JSON.parse(evt.data)?.message;
-        } catch {}
-        setLabel("Error");
-        console.log(`Error: ${m}`);
+        async function load() {
+          try {
+            const res = await fetch(`${baseURL}/api/summary/${selected}`);
+            if (!res.ok)
+              throw new Error(`Failed to fetch summary for ${ticker}`);
+            const json = await res.json();
+            setMapcontent(json);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        load();
         closeStream();
+        setLabel("Done");
       });
 
       es.onerror = () => {
         if (status === "running") {
           setStatus("error");
-          setLabel("Error (stream)");
+          setLabel("Error");
           closeStream();
         }
       };
