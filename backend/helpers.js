@@ -48,27 +48,28 @@ export function runPythonJson(py, args, { cwd } = {}) {
 
 export function runGeminiJson(symbol) {
   /*
-node gemini_summarize.js \
+node openrouter_summarize.js \
   --rules ./rules.json \
   --search ./uploads/TATACOFFEE_search_results.json \
-  --model gemini-1.5-flash \
-  --concurrency 3 \
+  --model deepseek/deepseek-chat-v3.1:free \
+  --concurrency 1 \
   --outDir ./outputs
 */
   return new Promise((resolve, reject) => {
     const geminiArgs = [
-      TRIGGER_AI,
+      "openrouter_summarize.js", // 👈 your OpenRouter-enabled script
       "--rules",
       "./rules.json",
       "--search",
       `./uploads/JSON/${symbol}_search_results.json`,
       "--model",
-      "gemini-2.0-flash-lite",
+      "deepseek/deepseek-chat-v3.1:free", // 👈 OpenRouter model
       "--concurrency",
       "1",
       "--outDir",
       "./outputs",
     ];
+
     const analyse = spawn("node", geminiArgs, { cwd: process.cwd() });
 
     analyse.stdout.on("data", (data) => {
@@ -81,8 +82,8 @@ node gemini_summarize.js \
 
     analyse.on("close", (code) => {
       if (code !== 0) {
-        failJob(jobId, new Error("Gemini failed with code " + code));
-        reject();
+        console.error(`Job failed with code ${code}`);
+        reject(new Error("OpenRouter job failed"));
       } else {
         resolve();
       }

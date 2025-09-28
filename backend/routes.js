@@ -54,7 +54,10 @@ mainRouter.post("/api/equity/annualReports/:symbol/start", async (req, res) => {
     "uploads",
     `JSON/${symbol}_search_results.json`
   );
-  const checkGeminiOutputPath = path.join("outputs", `${symbol}_gemini.json`);
+  const checkGeminiOutputPath = path.join(
+    "outputs",
+    `${symbol}_openrouter.json`
+  );
 
   (async () => {
     try {
@@ -134,7 +137,7 @@ mainRouter.post("/api/equity/annualReports/:symbol/start", async (req, res) => {
 
 mainRouter.get("/api/summary/:ticker", (req, res) => {
   const { ticker } = req.params;
-  const file = path.join(process.cwd(), "outputs", `${ticker}_gemini.json`);
+  const file = path.join(process.cwd(), "outputs", `${ticker}_openrouter.json`);
   try {
     const json = JSON.parse(fs.readFileSync(file, "utf8"));
     res.json(json);
