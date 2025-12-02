@@ -4,7 +4,8 @@ An AI engine for deeply analyzing stock entities listed on NSE. Tranditional LLM
 
 This project is written in Javascript and Python along with libraries such as React and Node.js!
 
-Make sure you check out [contribution help](https://github.com/acmpesuecc/octoanalyst/CONTRIBUTING.md) for better understanding. This will also help **_address common issues that you could face_** while running locally.
+Make sure you check out [contribution help](https://github.com/Mathew-K-Alexander/octoanalyst/blob/main/CONRIBUTING.md) for better understanding of the working of the project. This will also help **_address common issues that you could face_** while running locally.
+
 
 ## Installation
 
@@ -53,3 +54,4 @@ For backend:
 ### License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
