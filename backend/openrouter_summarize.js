@@ -19,9 +19,7 @@ dotenv.config();
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const OPENROUTER_TIMEOUT = Number(process.env.OPENROUTER_TIMEOUT || 90000); // configurable timeout
 
-// ----------------------
 // Utility functions
-// ----------------------
 function parseArgs() {
   const get = (flag) => {
     const idx = process.argv.indexOf(flag);
@@ -62,9 +60,8 @@ PAGES:
 ${pages}`;
 }
 
-// ----------------------
 // API call to OpenRouter
-// ----------------------
+
 async function callOpenRouter(modelName, prompt, topic) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), OPENROUTER_TIMEOUT);
@@ -108,9 +105,6 @@ async function callOpenRouter(modelName, prompt, topic) {
   }
 }
 
-// ----------------------
-// Main pipeline
-// ----------------------
 async function main() {
   const { rulesPath, searchPath, modelName, concurrency, outDir } = parseArgs();
 
@@ -148,7 +142,6 @@ async function main() {
   console.log(`\n✔ All done. Combined → ${finalPath}`);
 }
 
-// ----------------------
 main().catch((e) => {
   console.error("❌ Fatal error:", e);
   process.exit(1);
